@@ -1,0 +1,249 @@
+{
+  "info": {
+    "_postman_id": "4ce38e79-bcec-425b-b29d-85a0ed5b9ee2",
+    "name": "Weather May I C",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "open weather - temp - weather",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "7f80b6d4-bcb4-4d2c-813b-dc00138b2c3d",
+            "exec": [
+              "///",
+              "var jsonData = JSON.parse(responseBody);",
+              "",
+              "pm.variables.get(\"city\");",
+              "",
+              "///",
+              "",
+              "var dateObj = new Date();",
+              "var month = dateObj.getUTCMonth() + 1; //months from 1-12",
+              "var day = dateObj.getUTCDate();",
+              "var year = dateObj.getUTCFullYear();",
+              "",
+              "newdate = year + \"-\" + month + \"-\" + day;",
+              "",
+              "",
+              "///",
+              "",
+              "var weather = jsonData.weather[0].description;",
+              "var temp = jsonData.main.temp;",
+              "var city = jsonData.name;",
+              "var date = new Date()",
+              "//var cleandate = date.slice(0,date.lastIndexOf('T'));",
+              "",
+              "pm.environment.set('weather', weather)",
+              "pm.environment.set('temp', ((temp - 273.15)*(9/5)+32).toFixed(3).replace(/\\.(\\d\\d)\\d?$/, '.$1'))",
+              "pm.environment.set('thecity', city);",
+              "pm.environment.set('thedate', newdate);",
+              "",
+              "console.log(jsonData.name);",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "_postman_id": "63c28b42-dcba-4406-bdb8-bf344197875d",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "api.openweathermap.org/data/2.5/weather?zip={{zipcode}}&appid={{api-key}}",
+          "host": [
+            "api",
+            "openweathermap",
+            "org"
+          ],
+          "path": [
+            "data",
+            "2.5",
+            "weather"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "zip",
+              "value": "{{zipcode}}"
+            },
+            {
+              "key": "appid",
+              "value": "{{api-key}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AirNow - AQI",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "4d33db33-5a36-425c-b88d-4909bf645bbe",
+            "exec": [
+              "var jsonData = JSON.parse(responseBody);",
+              "",
+              "var aqi = jsonData[1].AQI;",
+              "var airquality = jsonData[1].Category.Name;",
+              "var city = jsonData[1].ReportingArea;",
+              "var inout = \"indoor\";",
+              "",
+              "if (aqi > 60){",
+              "    pm.environment.set(\"inout\", \"indoor\");",
+              "}",
+              "else {",
+              "    pm.environment.set(\"inout\", \"outdoor\");",
+              "}",
+              "",
+              "pm.environment.get(\"jsonData[6].AQI\");",
+              "pm.environment.set(\"aq\", airquality);",
+              "pm.environment.set(\"AQI\", aqi);",
+              "pm.environment.set(\"thecity\", city);",
+              "",
+              "",
+              "",
+              "console.log(jsonData[1].ReportingArea);",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "_postman_id": "3a6e6bb5-0dbe-4da9-b760-0d43ca7440c7",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&distance=25&API_KEY={{airnowkey}}&zipCode={{zipcode}}",
+          "protocol": "https",
+          "host": [
+            "www",
+            "airnowapi",
+            "org"
+          ],
+          "path": [
+            "aq",
+            "observation",
+            "zipCode",
+            "current",
+            ""
+          ],
+          "query": [
+            {
+              "key": "format",
+              "value": "application/json"
+            },
+            {
+              "key": "distance",
+              "value": "25"
+            },
+            {
+              "key": "API_KEY",
+              "value": "{{airnowkey}}"
+            },
+            {
+              "key": "zipCode",
+              "value": "{{zipcode}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Tweet Information",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "f34c356a-6a17-4475-8f9d-0e1b6d3dd7f8",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "_postman_id": "6d03b302-e116-48a9-ab52-9dc71116a138",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "oauth1",
+          "oauth1": {
+            "addParamsToHeader": true,
+            "tokenSecret": "{{token_secret}}",
+            "token": "{{access_token}}",
+            "consumerSecret": "{{consumer_secret}}",
+            "consumerKey": "{{consumer_key}}",
+            "signatureMethod": "HMAC-SHA1",
+            "version": "1.0",
+            "addEmptyParamsToSign": false
+          }
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "https://api.twitter.com/1.1/statuses/update.json?status=The weather in {{thecity}} is {{weather}} and {{temp}} \u00b0F. AQI is {{AQI}}, air quality is {{aq}}. You can have {{inout}} activites today.",
+          "protocol": "https",
+          "host": [
+            "api",
+            "twitter",
+            "com"
+          ],
+          "path": [
+            "1.1",
+            "statuses",
+            "update.json"
+          ],
+          "query": [
+            {
+              "key": "tweet.fields",
+              "value": "created_at,attachments",
+              "disabled": true
+            },
+            {
+              "key": "expansions",
+              "value": "author_id",
+              "type": "text",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "The weather in {{thecity}} is {{weather}} and {{temp}} \u00b0F. AQI is {{AQI}}, air quality is {{aq}}. You can have {{inout}} activites today."
+            },
+            {
+              "key": "",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "",
+              "value": "",
+              "type": "text",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
